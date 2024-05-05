@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookmark-manager-configmap
+data:
+  WELCOME: "Welcome to the bookmark manager"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bookmark-manager-pod
+spec:
+  containers:
+    - name: manager-container
+      image: callenengineering/bookmark-manager:latest
+      env:
+        - name: PORT
+          value: "8080"
+        - name: WELCOME
+          valueFrom:
+            configMapKeyRef:
+              name: bookmark-manager-configmap
+              key: WELCOME
+      envFrom:
+        - secretRef:
+            name: bookmark-manager-secret
+      ports:
+        - containerPort: 8080
